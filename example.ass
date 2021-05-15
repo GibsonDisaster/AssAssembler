@@ -1,0 +1,42 @@
+// General Purpose Registers are labeled r0-r15
+
+global _start // Tell the "assembler" what the main function is called
+
+.data
+  _start:
+    MOV #3, R1 // Move the value 3 into the register R1
+    mov #10, r2 // Move the value 10 into the register 2
+    add r1, R2, R3 // Add r1 and r2, saving result into r3
+
+    cmp r1, r2 // Compare r1 and r2, setting appropriate flags in the program datatype (E, G, L, GT, LT)
+    JE _eq // if E = 1 then set all cmp flags to 0 and pc = 28 (line number of _eq)
+    JG _greater // if G = 1 then set all cmp flags to 0 and pc = 26 (line number of _greater)
+    JL _lesser // if E = 1 then set all cmp flags to 0 and pc = 22 (line number of _lesser)
+
+    MOV #1, SYS // Move the value 1 into the SYS register
+    MOV msg, R1
+    MOV msgLen, R2
+    syscall // Call the syscall depending on the value in SYS register (0 = sys exit, 1 = print, ...)
+
+    MOV #0, SYS // Move the value 0 into the SYS register
+    syscall // Call the syscall depending on the vlaue in SYS register (exit in this case)
+
+  _lesser:
+    MOV #0, SYS // Move the value 0 into the SYS register
+    syscall // Call the syscall depending on the vlaue in SYS register (exit in this case)
+
+  _greater:
+    MOV #0, SYS // Move the value 0 into the SYS register
+    syscall // Call the syscall depending on the vlaue in SYS register (exit in this case)
+
+  _eq:
+    MOV #0, SYS // Move the value 0 into the SYS register
+    syscall // Call the syscall depending on the vlaue in SYS register (exit in this case)
+
+.text
+  msg: ascii "Hello World" // Bytes representing "Hello World" characters
+  msgLen: #11 // Number of characters (ignoring \0) that msg contains
+
+  byteTest1: bin 0x0001 // Binary representing 1
+  byteTest2: bin 0x1110 // Binary representing 4368
+  hexTest: hex 5A // Hex representing 90
